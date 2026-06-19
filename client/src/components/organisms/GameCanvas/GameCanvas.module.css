@@ -1,0 +1,6 @@
+.canvas {
+  display: block;
+  border: 2px solid #48cae4;
+  border-radius: 8px;
+  max-width: 100%;
+}
