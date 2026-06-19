@@ -9,7 +9,17 @@
 :root {
   --color-background: #023e8a;
   --color-text: #caf0f8;
+  --color-wave-blue: #48cae4;
+  --color-wave-gold: #ffd166;
+  --color-wave-red: #ef476f;
+  --color-hud-surface: rgba(3, 4, 94, 0.72);
   --font-body: 'Inter', system-ui, sans-serif;
+  --z-canvas: 0;
+  --z-hud: 10;
+  --z-modal: 20;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
 }
 
 body {

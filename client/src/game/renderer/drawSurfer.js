@@ -1,16 +1,21 @@
-import { colors } from '../../styles/tokens/colors.js';
+import { SPRITE_KEYS } from '../sprites/spriteKeys.js';
+import { drawEllipseShadow, getFloatOffset } from './renderUtils.js';
 
-export function drawSurfer(ctx, surfer) {
-  const centerX = surfer.x + surfer.width / 2;
+const SURFER_DISPLAY_WIDTH = 60;
+const SURFER_DISPLAY_HEIGHT = 90;
 
-  ctx.fillStyle = colors.surfer;
-  ctx.beginPath();
-  ctx.ellipse(centerX, surfer.y + surfer.height * 0.75, surfer.width * 0.6, 6, 0, 0, Math.PI * 2);
-  ctx.fill();
+export function drawSurfer(ctx, surfer, sprites, time = 0) {
+  const sprite = sprites[SPRITE_KEYS.SURFER];
+  const floatY = getFloatOffset(time, 0.4);
+  const baseCenterX = surfer.x + surfer.width / 2;
+  const baseCenterY = surfer.y + surfer.height / 2;
+  const drawX = baseCenterX - SURFER_DISPLAY_WIDTH / 2;
+  const drawY = baseCenterY - SURFER_DISPLAY_HEIGHT / 2 + floatY;
+  const shadowY = surfer.y + surfer.height - 3;
 
-  ctx.fillRect(surfer.x + surfer.width * 0.35, surfer.y + surfer.height * 0.2, surfer.width * 0.3, surfer.height * 0.55);
+  drawEllipseShadow(ctx, baseCenterX, shadowY, surfer.width * 0.34, 5, 0.28);
 
-  ctx.beginPath();
-  ctx.arc(centerX, surfer.y + surfer.height * 0.15, surfer.width * 0.2, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.save();
+  ctx.drawImage(sprite, drawX, drawY, SURFER_DISPLAY_WIDTH, SURFER_DISPLAY_HEIGHT);
+  ctx.restore();
 }

@@ -3,10 +3,10 @@ import { useGameEngine } from '../../../hooks/useGameEngine.js';
 import { game } from '../../../styles/tokens/game.js';
 import styles from './GameCanvas.module.css';
 
-export function GameCanvas({ onScoreChange }) {
+export function GameCanvas({ onGameStatsChange, onGameEnd, sessionKey = 0 }) {
   const canvasRef = useRef(null);
 
-  useGameEngine(canvasRef, { onScoreChange });
+  useGameEngine(canvasRef, { onGameStatsChange, onGameEnd, sessionKey });
 
   return (
     <canvas

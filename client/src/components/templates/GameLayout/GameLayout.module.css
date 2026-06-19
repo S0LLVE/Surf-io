@@ -1,0 +1,10 @@
+.layout {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.layout canvas {
+  position: relative;
+  z-index: var(--z-canvas);
+}

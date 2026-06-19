@@ -1,0 +1,25 @@
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 4.5rem;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.neutral {
+  border-left: 3px solid var(--color-text);
+}
+
+.blue {
+  border-left: 3px solid var(--color-wave-blue);
+}
+
+.gold {
+  border-left: 3px solid var(--color-wave-gold);
+}
+
+.red {
+  border-left: 3px solid var(--color-wave-red);
+}
