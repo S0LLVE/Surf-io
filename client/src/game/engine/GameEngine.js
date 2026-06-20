@@ -13,11 +13,12 @@ import { RenderSystem } from '../systems/RenderSystem.js';
 import { SpriteLoader } from '../sprites/SpriteLoader.js';
 
 export class GameEngine {
-  constructor(canvas, { onGameStatsChange, onGameEnd, sprites } = {}) {
+  constructor(canvas, { onGameStatsChange, onGameEnd, onSurferPositionChange, sprites } = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.onGameStatsChange = onGameStatsChange;
     this.onGameEnd = onGameEnd;
+    this.onSurferPositionChange = onSurferPositionChange;
     this.sprites = sprites;
 
     this.state = new GameState();
@@ -52,6 +53,12 @@ export class GameEngine {
 
     this.inputSystem.update(this.state);
     this.movementSystem.update(this.state);
+
+    if (this.onSurferPositionChange) {
+      const { x, y } = this.state.surfer;
+      this.onSurferPositionChange({ x, y });
+    }
+
     this.spawnSystem.update(this.state, deltaTime);
     this.collisionSystem.update(this.state);
     this.floatingTextSystem.update(this.state, deltaTime);

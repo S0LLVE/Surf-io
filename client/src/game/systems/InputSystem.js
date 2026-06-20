@@ -41,5 +41,8 @@ export class InputSystem {
     if (this.keys.has(KEYS.ArrowRight)) surfer.velocityX = speed;
     if (this.keys.has(KEYS.ArrowUp)) surfer.velocityY = -speed;
     if (this.keys.has(KEYS.ArrowDown)) surfer.velocityY = speed;
+
+    console.log('[KEYS]', [...this.keys]);
+    console.log('[VELOCITY]', surfer.velocityX, surfer.velocityY);
   }
 }

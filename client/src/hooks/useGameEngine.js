@@ -1,8 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { GameEngine } from '../game/engine/GameEngine.js';
 
-export function useGameEngine(canvasRef, { onGameStatsChange, onGameEnd, sessionKey = 0 } = {}) {
+export function useGameEngine(
+  canvasRef,
+  { onGameStatsChange, onGameEnd, onSurferPositionChange, sessionKey = 0 } = {},
+) {
   const engineRef = useRef(null);
+  const onSurferPositionChangeRef = useRef(onSurferPositionChange);
+  onSurferPositionChangeRef.current = onSurferPositionChange;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -10,7 +15,13 @@ export function useGameEngine(canvasRef, { onGameStatsChange, onGameEnd, session
 
     let cancelled = false;
 
-    GameEngine.create(canvas, { onGameStatsChange, onGameEnd }).then((engine) => {
+    GameEngine.create(canvas, {
+      onGameStatsChange,
+      onGameEnd,
+      onSurferPositionChange: (position) => {
+        onSurferPositionChangeRef.current?.(position);
+      },
+    }).then((engine) => {
       if (cancelled) {
         engine.destroy();
         return;

@@ -5,6 +5,7 @@ import { GameOverModal } from '../components/organisms/GameOverModal';
 import { GameLayout } from '../components/templates/GameLayout';
 import { useGameTimer } from '../hooks/useGameTimer.js';
 import { useHighScore } from '../hooks/useHighScore.js';
+import { useSocket } from '../hooks/useSocket.js';
 import { formatElapsedTime } from '../utils/formatTime.js';
 import { game } from '../styles/tokens/game.js';
 import styles from './GamePage.module.css';
@@ -18,13 +19,23 @@ const INITIAL_STATS = {
   },
 };
 
-export function GamePage() {
+export function GamePage({ pseudo }) {
+  const { players, socketId } = useSocket(pseudo);
+
   const [sessionKey, setSessionKey] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStats, setGameStats] = useState(INITIAL_STATS);
+
   const { bestScore, updateBestScore } = useHighScore();
-  const elapsedTime = useGameTimer({ isRunning: !gameOver, sessionKey });
-  const displayTime = gameOver ? formatElapsedTime(game.session.durationMs) : elapsedTime;
+
+  const elapsedTime = useGameTimer({
+    isRunning: !gameOver,
+    sessionKey,
+  });
+
+  const displayTime = gameOver
+    ? formatElapsedTime(game.session.durationMs)
+    : elapsedTime;
 
   const handleGameStatsChange = useCallback(
     (stats) => {
@@ -64,19 +75,27 @@ export function GamePage() {
         }
         overlay={
           gameOver ? (
-            <GameOverModal score={gameStats.score} bestScore={bestScore} onReplay={handleReplay} />
+            <GameOverModal
+              score={gameStats.score}
+              bestScore={bestScore}
+              onReplay={handleReplay}
+            />
           ) : null
         }
       >
         <GameCanvas
           key={sessionKey}
           sessionKey={sessionKey}
+          players={players}
+          localPlayerId={socketId}
           onGameStatsChange={handleGameStatsChange}
           onGameEnd={handleGameEnd}
         />
       </GameLayout>
 
-      <p className={styles.hint}>Utilise les flèches du clavier pour te déplacer.</p>
+      <p className={styles.hint}>
+        Utilise les flèches du clavier pour te déplacer.
+      </p>
     </main>
   );
 }
