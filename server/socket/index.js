@@ -16,6 +16,7 @@ function initSocket(io) {
     console.log('[DIAG] broadcastPlayers() appelé');
     console.log('[DIAG] players actuel :', players);
     console.log('[PSEUDO_SYNC]', players);
+    console.log('[READY_SYNC]', playerManager.getAll());
     console.log('[DIAG] Émission PLAYERS_SYNC →', SOCKET_EVENTS.PLAYERS_SYNC, `(${players.length} joueur(s))`);
 
     io.emit(SOCKET_EVENTS.PLAYERS_SYNC, {
@@ -52,6 +53,18 @@ function initSocket(io) {
 
       playerManager.updatePseudo(socket.id, pseudo.trim());
       console.log('[DEBUG_GETALL_RESULT]', playerManager.getAll());
+    });
+
+    socket.on(SOCKET_EVENTS.PLAYER_READY, (data) => {
+      console.log('[PLAYER_READY]', socket.id, data);
+
+      const { ready } = data;
+      if (typeof ready !== 'boolean') {
+        return;
+      }
+
+      playerManager.updateReady(socket.id, ready);
+      console.log('[READY_SYNC]', playerManager.getAll());
     });
 
     socket.on(SOCKET_EVENTS.PLAYER_MOVE, (data) => {

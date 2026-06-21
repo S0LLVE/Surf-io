@@ -13,6 +13,7 @@ class PlayerManager {
       x,
       y,
       pseudo: null,
+      ready: false,
     };
 
     this.players.set(id, player);
@@ -43,6 +44,17 @@ class PlayerManager {
     }
 
     player.pseudo = pseudo;
+    return true;
+  }
+
+  updateReady(id, ready) {
+    const player = this.players.get(id);
+
+    if (!player) {
+      return false;
+    }
+
+    player.ready = ready;
     return true;
   }
 
