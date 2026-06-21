@@ -47,8 +47,7 @@ export function useSocket(pseudo) {
     };
 
     if (socket.connected) {
-      setSocketId(socket.id);
-      emitPlayerJoin(socket);
+      queueMicrotask(handleConnect);
     }
 
     socket.on('connect', handleConnect);

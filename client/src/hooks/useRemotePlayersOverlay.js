@@ -4,9 +4,11 @@ import { drawRemotePlayer } from '../game/renderer/drawRemotePlayer.js';
 
 export function useRemotePlayersOverlay(canvasRef, players, localPlayerId) {
   const playersRef = useRef(players);
-  playersRef.current = players;
-
   const lastLoggedRef = useRef(new Map());
+
+  useEffect(() => {
+    playersRef.current = players;
+  }, [players]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -14,6 +16,7 @@ export function useRemotePlayersOverlay(canvasRef, players, localPlayerId) {
       return undefined;
     }
 
+    const lastLogged = lastLoggedRef.current;
     const ctx = canvas.getContext('2d');
     let frameId;
 
@@ -25,8 +28,8 @@ export function useRemotePlayersOverlay(canvasRef, players, localPlayerId) {
           const renderInfo = drawPlayerPseudo(ctx, player);
           const logKey = `${renderInfo.pseudo}:${renderInfo.x}:${renderInfo.y}`;
 
-          if (lastLoggedRef.current.get(player.id) !== logKey) {
-            lastLoggedRef.current.set(player.id, logKey);
+          if (lastLogged.get(player.id) !== logKey) {
+            lastLogged.set(player.id, logKey);
             console.log('[PSEUDO_RENDER]', renderInfo);
           }
 
@@ -38,8 +41,8 @@ export function useRemotePlayersOverlay(canvasRef, players, localPlayerId) {
         const renderInfo = drawPlayerPseudo(ctx, player);
         const logKey = `${renderInfo.pseudo}:${renderInfo.x}:${renderInfo.y}`;
 
-        if (lastLoggedRef.current.get(player.id) !== logKey) {
-          lastLoggedRef.current.set(player.id, logKey);
+        if (lastLogged.get(player.id) !== logKey) {
+          lastLogged.set(player.id, logKey);
           console.log('[PSEUDO_RENDER]', renderInfo);
         }
       }
@@ -51,7 +54,7 @@ export function useRemotePlayersOverlay(canvasRef, players, localPlayerId) {
 
     return () => {
       cancelAnimationFrame(frameId);
-      lastLoggedRef.current.clear();
+      lastLogged.clear();
     };
   }, [canvasRef, localPlayerId]);
 }

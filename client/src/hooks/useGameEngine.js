@@ -7,7 +7,10 @@ export function useGameEngine(
 ) {
   const engineRef = useRef(null);
   const onSurferPositionChangeRef = useRef(onSurferPositionChange);
-  onSurferPositionChangeRef.current = onSurferPositionChange;
+
+  useEffect(() => {
+    onSurferPositionChangeRef.current = onSurferPositionChange;
+  }, [onSurferPositionChange]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
