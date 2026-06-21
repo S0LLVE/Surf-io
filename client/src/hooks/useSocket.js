@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { connectSocket, getSocket, SOCKET_EVENTS } from '../services/socketService.js';
 
 export function useSocket(pseudo) {
@@ -17,6 +17,15 @@ export function useSocket(pseudo) {
     },
     [pseudo],
   );
+
+  const emitPlayerReady = useCallback(() => {
+    const socket = connectSocket();
+    if (!socket.connected) {
+      return;
+    }
+
+    socket.emit(SOCKET_EVENTS.PLAYER_READY, { ready: true });
+  }, []);
 
   useEffect(() => {
     const socket = connectSocket();
@@ -51,5 +60,52 @@ export function useSocket(pseudo) {
     };
   }, [emitPlayerJoin]);
 
-  return { players, socketId, pseudo: syncedPseudo };
+  const activePlayers = useMemo(
+    () => players.filter((player) => player.pseudo?.trim()),
+    [players],
+  );
+
+  const isReady = useMemo(() => {
+    if (!socketId) {
+      return false;
+    }
+
+    const localPlayer = players.find((player) => player.id === socketId);
+    return localPlayer?.ready === true;
+  }, [players, socketId]);
+
+  const readyCount = useMemo(
+    () => activePlayers.filter((player) => player.ready === true).length,
+    [activePlayers],
+  );
+
+  const allReady = useMemo(
+    () => activePlayers.length > 0 && activePlayers.every((player) => player.ready === true),
+    [activePlayers],
+  );
+
+  useEffect(() => {
+    console.log('[ACTIVE_PLAYERS]', {
+      playersLength: players.length,
+      activePlayersLength: activePlayers.length,
+      activePlayers,
+    });
+    console.log('[ALL_READY_CHECK]', {
+      playersLength: players.length,
+      activePlayersLength: activePlayers.length,
+      readyCount,
+      allReady,
+    });
+  }, [players, activePlayers, readyCount, allReady]);
+
+  return {
+    players,
+    activePlayers,
+    socketId,
+    pseudo: syncedPseudo,
+    isReady,
+    readyCount,
+    allReady,
+    emitPlayerReady,
+  };
 }

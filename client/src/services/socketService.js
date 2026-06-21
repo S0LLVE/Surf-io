@@ -4,6 +4,7 @@ export const SOCKET_EVENTS = {
   PLAYERS_SYNC: 'players:sync',
   PLAYER_MOVE: 'player:move',
   PLAYER_JOIN: 'player:join',
+  PLAYER_READY: 'player:ready',
 };
 
 const SOCKET_URL = 'http://localhost:3001';

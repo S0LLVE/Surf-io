@@ -71,6 +71,7 @@ export function GamePage({ pseudo }) {
             bestScore={bestScore}
             elapsedTime={displayTime}
             waveCounts={gameStats.waveCounts}
+            players={players}
           />
         }
         overlay={
