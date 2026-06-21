@@ -7,7 +7,7 @@ export const SOCKET_EVENTS = {
   PLAYER_READY: 'player:ready',
 };
 
-const SOCKET_URL = 'http://localhost:3001';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
 
 let socket = null;
 
